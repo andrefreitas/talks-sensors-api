@@ -1,21 +1,16 @@
 # SensorsApi
+Example API that demonstrates how GenStage can handle backpressure in a large scale of events
 
-**TODO: Add description**
+## Usage
+Start webserver with:
 
-## Installation
+    iex -s mix
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `sensors_api` to your list of dependencies in `mix.exs`:
+## Benchmarks
+Without GenStage:
 
-```elixir
-def deps do
-  [
-    {:sensors_api, "~> 0.1.0"}
-  ]
-end
-```
+    ab -n 1000 -c 4 -T 'application/json' -p test/data.json 127.0.0.1:4001/measurement
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/sensors_api](https://hexdocs.pm/sensors_api).
+With GenStage:
 
+    ab -n 1000 -c 4 -T 'application/json' -p test/data.json 127.0.0.1:4001/v2/measurement

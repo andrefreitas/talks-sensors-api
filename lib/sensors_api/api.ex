@@ -2,7 +2,9 @@ defmodule SensorsApi.API do
   use Plug.Router
 
   alias SensorsApi.Repo
+  alias SensorsApi.Queue
   alias SensorsApi.Measurement
+  alias SensorsApi.MeasurementProducer
 
   plug(:match)
 
@@ -19,6 +21,13 @@ defmodule SensorsApi.API do
     |> Repo.insert!()
 
     send_resp(conn, 201, "created")
+  end
+
+  post "v2/measurement" do
+    struct(Measurement, measurement_params(conn))
+    |> MeasurementProducer.sync_notify()
+
+    send_resp(conn, 202, "accepted")
   end
 
   defp measurement_params(conn) do

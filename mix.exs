@@ -5,7 +5,7 @@ defmodule SensorsApi.MixProject do
     [
       app: :sensors_api,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.7.4",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -20,6 +20,7 @@ defmodule SensorsApi.MixProject do
 
   defp deps do
     [
+      {:gen_stage, "~> 0.14.1"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:jason, "~> 1.1"},
