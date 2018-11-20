@@ -1,14 +1,12 @@
-defmodule SensorsApi.MeasurementProducer do
+defmodule SensorsApi.MeasurementProducerBuffered do
   use GenStage
 
   def start_link(args) do
-    GenStage.start_link(__MODULE__, args, name: args[:name] || __MODULE__)  
+    GenStage.start_link(__MODULE__, [], name: args[:name] || __MODULE__)  
   end
 
-  def init(%{queue_ref: queue_ref}) do
-    state = %{queue_ref: queue_ref}
-
-    {:producer, state}
+  def init(_args) do
+    {:producer, []}
   end
 
   def sync_notify(event, timeout \\ 5000) do
@@ -22,5 +20,4 @@ defmodule SensorsApi.MeasurementProducer do
   def handle_demand(_demand, state) do 
     {:noreply, [], state} # we don't care about demand
   end
-
 end

@@ -4,7 +4,8 @@ defmodule SensorsApi.API do
   alias SensorsApi.Repo
   alias SensorsApi.Queue
   alias SensorsApi.Measurement
-  alias SensorsApi.MeasurementProducer
+  alias SensorsApi.MeasurementProducerBuffered
+  alias SensorsApi.MeasurementProducerQueued
 
   plug(:match)
 
@@ -16,19 +17,32 @@ defmodule SensorsApi.API do
 
   plug(:dispatch)
 
+  post "/test" do 
+    send_resp(conn, 200, "success")
+  end
+
   post "/measurement" do
-    struct(Measurement, measurement_params(conn))
+    measurement(conn)
     |> Repo.insert!()
 
     send_resp(conn, 201, "created")
   end
 
   post "v2/measurement" do
-    struct(Measurement, measurement_params(conn))
-    |> MeasurementProducer.sync_notify()
+    measurement(conn)
+    |> MeasurementProducerBuffered.sync_notify()
 
     send_resp(conn, 202, "accepted")
   end
+
+  post "v3/measurement" do 
+    Queue.enqueue(Queue, measurement(conn))
+    MeasurementProducerQueued.notify()
+
+    send_resp(conn, 202, "accepted")
+  end
+
+  defp measurement(conn), do: struct(Measurement, measurement_params(conn))
 
   defp measurement_params(conn) do
     params = conn.body_params

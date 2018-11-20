@@ -33,5 +33,5 @@ config :sensors_api, ecto_repos: [SensorsApi.Repo]
 
 config :sensors_api, SensorsApi.Repo,
   database: "sensors_api",
-  username: "andre",
+  username: "andre.freitas",
   hostname: "localhost"
