@@ -28,10 +28,6 @@ __POST /v2/measurement__
 
 
 ## Benchmarks
-Without GenStage:
+Run HTTP benchmarks with:
 
-    ab -n 1000 -c 4 -T 'application/json' -p test/data.json 127.0.0.1:4001/measurement
-
-With GenStage:
-
-    ab -n 1000 -c 4 -T 'application/json' -p test/data.json 127.0.0.1:4001/v2/measurement
+    ./benchmarks.sh
